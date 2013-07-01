@@ -1,0 +1,40 @@
+sshkeygen: minimal version of the OpenSSH ssh-keygen(1) utility.
+
+This was primarily written as a proof-of-concept and test of the sshkey[1]
+package.
+
+Usage: sshkeygen [flags]
+    -b bitsize          bitsize of key to create
+    -c comment          key comment
+    -f filename         input keyfile
+    -l                  show fingerprint of keyfile
+    -t keytype          type of key to create
+
+By default, sshkeygen will generate 256-bit ECDSA keys.
+
+Options:
+
+    -b bitsize
+        This selects the size of the key to be generated, in bits. For
+        ECDSA keys, valid sizes are 256, 384, or 521 bits. For RSA keys,
+        a minimum size of 2048 bits is enforced.
+
+    -c comment
+        Specify a comment for the generated key. If no comment is provided,
+        the default commend 'user@host' is used.
+
+    -f filename
+        Specify the filename of the SSH key file. If a key is being
+        generated, the private key is stored in "filename", and the
+        public key is stored in "filename.pub".
+
+    -l  Display the fingerprint for an SSH public key. Currently, this fails
+        if the file is a private key.
+
+    -t keytype
+        Specify the type of key to create. Permissible values are "rsa"
+        and "ecdsa".
+
+License:
+
+sshkeygen is released under an ISC license.
