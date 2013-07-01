@@ -127,6 +127,11 @@ func keygen(keyfile, keytype, comment string, size int) {
 		}
 	}
 
+	if _, err = os.Stat(keyfile); !os.IsNotExist(err) {
+		fmt.Printf("keyfile %q already exists.\n", keyfile)
+		os.Exit(1)
+	}
+
 	var password string
 	for {
 		password, err = sshkey.PasswordPrompt("Enter password (empty for no passphrase): ")
