@@ -119,12 +119,17 @@ func keygen(keyfile, keytype, comment string, size int) {
 
 	if keyfile == "" {
 		defkey := defaultKey(keytype)
-		prompt := fmt.Sprintf("Enter file in which to save the ke (%s): ", defkey)
+		prompt := fmt.Sprintf("Enter file in which to save the key (%s): ", defkey)
 		keyfile, err = ReadPrompt(prompt)
 		checkErr(err)
 		if keyfile == "" {
 			keyfile = defkey
 		}
+	}
+
+	if _, err = os.Stat(keyfile); !os.IsNotExist(err) {
+		fmt.Printf("keyfile %q already exists.\n", keyfile)
+		os.Exit(1)
 	}
 
 	var password string
