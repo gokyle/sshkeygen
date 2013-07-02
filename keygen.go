@@ -109,11 +109,11 @@ func keygen(keyfile, keytype, comment string, size int) {
 	switch keytype {
 	case "rsa":
 		fmt.Println("Generating public/private rsa key pair.")
-		key, err = sshkey.GenerateSSHKey(sshkey.KEY_RSA, size)
+		key, err = sshkey.GenerateKey(sshkey.KEY_RSA, size)
 		checkErr(err)
 	case "ecdsa":
 		fmt.Println("Generating public/private ecdsa key pair.")
-		key, err = sshkey.GenerateSSHKey(sshkey.KEY_ECDSA, size)
+		key, err = sshkey.GenerateKey(sshkey.KEY_ECDSA, size)
 		checkErr(err)
 	}
 
@@ -128,8 +128,12 @@ func keygen(keyfile, keytype, comment string, size int) {
 	}
 
 	if _, err = os.Stat(keyfile); !os.IsNotExist(err) {
-		fmt.Printf("keyfile %q already exists.\n", keyfile)
-		os.Exit(1)
+		fmt.Printf("%s already exists.\n", keyfile)
+                yn, err := ReadPrompt("Overwrite (y/n)? ")
+                checkErr(err)
+                if strings.ToUpper(string(yn[0])) != "Y" {
+		        os.Exit(1)
+                }
 	}
 
 	var password string
@@ -149,6 +153,12 @@ func keygen(keyfile, keytype, comment string, size int) {
 			break
 		}
 	}
+
+        if password != "" && len(password) < 5 {
+                fmt.Printf("passphrase too short: have %d bytes, need > 4\n",
+                        len(password))
+                fmt.Println("Saving the key failed:", keyfile)
+        }
 
 	privout, err := sshkey.MarshalPrivate(key, password)
 	checkErr(err)
