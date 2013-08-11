@@ -158,6 +158,7 @@ func keygen(keyfile, keytype, comment string, size int) {
                 fmt.Printf("passphrase too short: have %d bytes, need > 4\n",
                         len(password))
                 fmt.Println("Saving the key failed:", keyfile)
+		os.Exit(1)
         }
 
 	privout, err := sshkey.MarshalPrivate(key, password)
